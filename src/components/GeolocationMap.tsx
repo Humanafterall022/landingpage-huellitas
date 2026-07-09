@@ -11,7 +11,7 @@ export const GeolocationMap: React.FC = () => {
         </p>
       </div>
 
-      <div style={styles.mapLayout} className="glassmorphism">
+      <div className="map-layout glassmorphism">
         {/* Lado Izquierdo: Infografía del Mapa y Radar */}
         <div style={styles.mapContainer}>
           <svg style={styles.svgMap} viewBox="0 0 500 350">

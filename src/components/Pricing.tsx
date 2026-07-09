@@ -81,7 +81,7 @@ export const Pricing: React.FC = () => {
         </p>
       </div>
 
-      <div style={styles.gridContainer}>
+      <div className="pricing-grid">
         {PLANS.map((plan, i) => (
           <div 
             key={i} 

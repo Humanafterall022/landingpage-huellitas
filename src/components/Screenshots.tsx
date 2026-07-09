@@ -12,7 +12,7 @@ export const Screenshots: React.FC = () => {
         </p>
       </div>
 
-      <div style={styles.gridContainer}>
+      <div className="screenshots-grid">
         {/* Celular 1: Avistamientos */}
         <div style={styles.card}>
           <div style={styles.mockupContainer}>

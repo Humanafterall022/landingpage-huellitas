@@ -12,7 +12,7 @@ export const YoloDemo: React.FC = () => {
         </p>
       </div>
 
-      <div style={styles.infoLayout} className="glassmorphism">
+      <div className="info-layout glassmorphism">
         {/* Lado Izquierdo: Representación gráfica de YOLOv8 */}
         <div style={styles.graphicPane}>
           <div style={styles.screenWrapper}>

@@ -51,14 +51,14 @@ export const Features: React.FC = () => {
   return (
     <section id="features" style={styles.section}>
       <div style={styles.sectionHeader}>
-        <span style={styles.accentText}>PROpUESTA DE VALOR</span>
+        <span style={styles.accentText}>PROPUESTA DE VALOR</span>
         <h2 style={styles.sectionTitle}>¿Qué nos diferencia de otras plataformas?</h2>
         <p style={styles.sectionSub}>
           Buscamos solucionar el extravío de mascotas lo más rápido posible facilitando que regresen a sus hogares mediante una plataforma centralizada, inteligente y colaborativa.
         </p>
       </div>
 
-      <div style={styles.featuresGrid}>
+      <div className="features-grid">
         {FEATURES.map((feature, i) => (
           <div
             key={i}

@@ -57,7 +57,7 @@ export const InstallGuide: React.FC = () => {
         </p>
       </div>
 
-      <div style={styles.guideLayout}>
+      <div className="guide-layout">
         {/* Acordeón interactivo a la izquierda */}
         <div style={styles.accordionContainer}>
           {GUIDE_STEPS.map((step) => {

@@ -18,13 +18,13 @@ export const Hero: React.FC = () => {
       </nav>
 
       {/* Hero Content */}
-      <div style={styles.heroGrid}>
+      <div className="hero-grid">
         <div style={styles.heroLeft}>
-          <div style={styles.tag}>
+          <div className="hero-tag">
             <span style={styles.tagDot}></span>
             <span>Inteligencia Artificial & Geolocalización</span>
           </div>
-          <h1 style={styles.title}>
+          <h1 className="hero-title">
             Reencuentros <span className="text-gradient-coral">Rápidos</span>,<br />
             Mascotas a salvo con <span className="text-gradient-cyan">YOLO AI</span>
           </h1>
@@ -33,7 +33,7 @@ export const Hero: React.FC = () => {
           </p>
 
           <div style={styles.ctaContainer}>
-            <div style={styles.ctaRow}>
+            <div className="cta-row">
               <a href="/api/download" style={styles.primaryBtn} className="glow-cyan">
                 <Download size={20} style={{ marginRight: '8px' }} />
                 Descargar APK
@@ -46,14 +46,14 @@ export const Hero: React.FC = () => {
                 <span style={styles.comingSoonBadge}>Coming Soon</span>
               </div>
             </div>
-            <div style={styles.versionInfo}>
+            <div className="version-info">
               <span>Versión 1.0.0 (Estable)</span>
               <span style={styles.bullet}>•</span>
               <span> (Android)</span>
             </div>
           </div>
 
-          <div style={styles.badgeGrid}>
+          <div className="badge-grid">
             <div style={styles.badge}>
               <BrainCircuit size={18} color="var(--color-secondary)" style={{ marginRight: '8px' }} />
               <span>Detección YOLO</span>
