@@ -6,10 +6,29 @@ import { Screenshots } from './components/Screenshots';
 import { Features } from './components/Features';
 import { Pricing } from './components/Pricing';
 import { InstallGuide } from './components/InstallGuide';
+import { PMVSurvey, SURVEY_URL } from './components/PMVSurvey';
+import { AdminModal } from './components/AdminModal';
+import { Lock } from 'lucide-react';
 
 function App() {
+  const [isAdminModalOpen, setIsAdminModalOpen] = React.useState(false);
+
   return (
     <div style={styles.appContainer}>
+      {/* Announcement Banner */}
+      <div style={styles.announcementBanner}>
+        <span>📋 Ayúdanos a mejorar: completa la <strong>Encuesta de Validación PMV</strong> de Huellitas AI.</span>
+        <a
+          href={SURVEY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.announcementLink}
+          className="announcement-hover-link"
+        >
+          Responder encuesta →
+        </a>
+      </div>
+
       {/* Hero Header Section */}
       <Hero />
 
@@ -44,6 +63,11 @@ function App() {
       {/* Step by step install guide for APK */}
       <InstallGuide />
 
+      <div style={styles.glowDivider}></div>
+
+      {/* Encuesta de Validación del PMV */}
+      <PMVSurvey />
+
       {/* Footer */}
       <footer style={styles.footer}>
         <div style={styles.footerContent}>
@@ -56,7 +80,7 @@ function App() {
               Reuniendo familias con el poder de la Inteligencia Artificial.
             </p>
           </div>
-          
+
           <div style={styles.footerLinks}>
             <div style={styles.footerCol}>
               <h5 style={styles.footerColTitle}>Equipo de Desarrollo</h5>
@@ -75,16 +99,28 @@ function App() {
               <h5 style={styles.footerColTitle}>Soporte</h5>
               <a href="#guia" style={styles.footerLink}>Guía de Instalación</a>
               <a href="/api/download" style={styles.footerLink}>Descargar APK</a>
+              <a href={SURVEY_URL} target="_blank" rel="noopener noreferrer" style={styles.footerLink}>Encuesta PMV</a>
               <span style={styles.footerLinkDisabled}>Términos de Servicio</span>
             </div>
           </div>
         </div>
-        
+
         <div style={styles.footerBottom}>
           <p>© {new Date().getFullYear()} HuellitasIA. Todos los derechos reservados.</p>
-          <p style={{ color: 'var(--text-dark)' }}>Desarrollado para la protección y reencuentro de mascotas.</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <p style={{ color: 'var(--text-dark)' }}>Desarrollado para la protección y reencuentro de mascotas.</p>
+            <button
+              onClick={() => setIsAdminModalOpen(true)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-dark)', padding: '2px', display: 'inline-flex', alignItems: 'center' }}
+              title="Administración"
+            >
+              <Lock size={12} />
+            </button>
+          </div>
         </div>
       </footer>
+
+      <AdminModal isOpen={isAdminModalOpen} onClose={() => setIsAdminModalOpen(false)} />
     </div>
   );
 }
@@ -95,6 +131,30 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     flexDirection: 'column',
     overflowX: 'hidden',
+  },
+  announcementBanner: {
+    width: '100%',
+    background: 'linear-gradient(90deg, rgba(14, 165, 233, 0.08) 0%, rgba(255, 78, 32, 0.08) 100%)',
+    borderBottom: '1px solid rgba(14, 165, 233, 0.15)',
+    padding: '10px 24px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: '12px',
+    fontSize: '14px',
+    color: 'var(--text-main)',
+    textAlign: 'center',
+    flexWrap: 'wrap',
+    zIndex: 100,
+  },
+  announcementLink: {
+    color: 'var(--color-primary)',
+    fontWeight: 700,
+    textDecoration: 'none',
+    display: 'inline-flex',
+    alignItems: 'center',
+    transition: 'var(--transition-smooth)',
+    cursor: 'pointer',
   },
   glowDivider: {
     width: '100%',

@@ -10,7 +10,7 @@ export const Hero: React.FC = () => {
           <img src="/logo.png" alt="HuellitasIA Logo" style={styles.logoImg} />
           <span style={styles.logoText}>Huellitas<span style={styles.logoHighlight}>IA</span></span>
         </div>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <a href="/api/download" style={styles.navBtn}>
             <Download size={16} style={{ marginRight: '6px' }} /> Descargar APK
           </a>
@@ -26,7 +26,7 @@ export const Hero: React.FC = () => {
           </div>
           <h1 className="hero-title">
             Reencuentros <span className="text-gradient-coral">Rápidos</span>,<br />
-            Mascotas a salvo con <span className="text-gradient-cyan">YOLO AI</span>
+            Mascotas a salvo con <span className="text-gradient-cyan">HUELLITAS AI</span>
           </h1>
           <p style={styles.subtitle}>
             HuellitasIA utiliza algoritmos avanzados de visión artificial para identificar y emparejar instantáneamente mascotas perdidas y encontradas. Localiza a tu mejor amigo con mapas en tiempo real y alertas comunitarias.
@@ -141,6 +141,14 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'inline-flex',
     alignItems: 'center',
     transition: 'var(--transition-smooth)',
+  },
+  navLink: {
+    color: 'var(--text-muted)',
+    textDecoration: 'none',
+    fontSize: '14px',
+    fontWeight: 600,
+    transition: 'var(--transition-smooth)',
+    cursor: 'pointer',
   },
   heroGrid: {
     display: 'grid',
