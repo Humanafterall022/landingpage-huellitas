@@ -1,5 +1,6 @@
 import React from 'react';
 import { ClipboardList, ArrowRight, Heart } from 'lucide-react';
+import { trackSurveyClick } from '../utils/analytics';
 
 export const SURVEY_URL = "https://docs.google.com/forms/d/e/1FAIpQLScKI9Q4NXiSnCEmy3BDf1Zj56XpgW8vG_Xg-5BVNGIIzafX7g/viewform";
 
@@ -30,6 +31,7 @@ export const PMVSurvey: React.FC = () => {
               href={surveyUrl} 
               target="_blank" 
               rel="noopener noreferrer" 
+              onClick={trackSurveyClick}
               style={styles.button}
               className="glow-coral"
             >

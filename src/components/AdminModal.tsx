@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, X, Download, Calendar } from 'lucide-react';
+import { Lock, X, Download, Calendar, Clock, ArrowDownCircle, TrendingDown, MousePointer, Users, RefreshCw } from 'lucide-react';
 
 interface AdminModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+interface StatsData {
+  totalDownloads: number;
+  totalSessions: number;
+  avgTimeSeconds: number;
+  avgScrollDepth: number;
+  bounceRate: number;
+  totalSurveyClicks: number;
+  bounceSessions: number;
+  lastUpdated?: string;
+}
+
 export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
   const [secretKey, setSecretKey] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [stats, setStats] = useState<{ totalDownloads: number; lastUpdated?: string } | null>(null);
+  const [stats, setStats] = useState<StatsData | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +32,6 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
         fetchStats(savedKey);
       }
     } else {
-      // Limpiar errores cuando se cierra el modal
       setError('');
     }
   }, [isOpen]);
@@ -42,7 +52,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
       const data = await response.json();
       if (data.success) {
         setStats({
-          totalDownloads: data.totalDownloads,
+          totalDownloads: data.totalDownloads || 0,
+          totalSessions: data.totalSessions || 0,
+          avgTimeSeconds: data.avgTimeSeconds || 0,
+          avgScrollDepth: data.avgScrollDepth || 0,
+          bounceRate: data.bounceRate || 0,
+          totalSurveyClicks: data.totalSurveyClicks || 0,
+          bounceSessions: data.bounceSessions || 0,
           lastUpdated: data.lastUpdated
         });
         setIsAuthenticated(true);
@@ -72,6 +88,13 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
     sessionStorage.removeItem('admin_secret_huellitas');
   };
 
+  const formatDuration = (seconds: number) => {
+    if (seconds < 60) return `${seconds}s`;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}m ${secs}s`;
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -80,7 +103,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
         <div style={styles.header}>
           <div style={styles.titleRow}>
             <Lock size={18} color="var(--color-primary)" style={{ marginRight: '8px' }} />
-            <h3 style={styles.title}>Panel de Administración</h3>
+            <h3 style={styles.title}>Panel de Administración & Analíticas</h3>
           </div>
           <button onClick={onClose} style={styles.closeBtn} title="Cerrar">
             <X size={18} />
@@ -91,7 +114,7 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
           {!isAuthenticated ? (
             <form onSubmit={handleLogin} style={styles.form}>
               <p style={styles.infoText}>
-                Introduce la clave secreta de administración para ver las estadísticas de descargas de Huellitas IA.
+                Introduce la clave secreta de administración para ver las métricas de engagement y descargas de Huellitas IA.
               </p>
               <div style={styles.inputGroup}>
                 <input
@@ -111,13 +134,77 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
             </form>
           ) : (
             <div style={styles.statsContainer}>
-              <div style={styles.statCard}>
-                <div style={styles.statIconContainer}>
-                  <Download size={22} color="var(--color-secondary)" />
+              <div style={styles.kpiGrid}>
+                {/* Tiempo promedio en página */}
+                <div style={styles.kpiCard}>
+                  <div style={{ ...styles.kpiIcon, backgroundColor: 'rgba(14, 165, 233, 0.12)' }}>
+                    <Clock size={20} color="var(--color-secondary)" />
+                  </div>
+                  <div style={styles.kpiInfo}>
+                    <span style={styles.kpiLabel}>Tiempo Promedio</span>
+                    <span style={styles.kpiValue}>{formatDuration(stats?.avgTimeSeconds || 0)}</span>
+                    <span style={styles.kpiSub}>Permanencia en sitio</span>
+                  </div>
                 </div>
-                <div style={styles.statInfo}>
-                  <span style={styles.statLabel}>Descargas de la APK</span>
-                  <span style={styles.statValue}>{stats?.totalDownloads}</span>
+
+                {/* Scroll Depth */}
+                <div style={styles.kpiCard}>
+                  <div style={{ ...styles.kpiIcon, backgroundColor: 'rgba(16, 185, 129, 0.12)' }}>
+                    <ArrowDownCircle size={20} color="#10b981" />
+                  </div>
+                  <div style={styles.kpiInfo}>
+                    <span style={styles.kpiLabel}>Scroll Depth</span>
+                    <span style={styles.kpiValue}>{stats?.avgScrollDepth || 0}%</span>
+                    <span style={styles.kpiSub}>Profundidad promedio</span>
+                  </div>
+                </div>
+
+                {/* Tasa de Rebote */}
+                <div style={styles.kpiCard}>
+                  <div style={{ ...styles.kpiIcon, backgroundColor: 'rgba(239, 68, 68, 0.12)' }}>
+                    <TrendingDown size={20} color="#ef4444" />
+                  </div>
+                  <div style={styles.kpiInfo}>
+                    <span style={styles.kpiLabel}>Tasa de Rebote</span>
+                    <span style={styles.kpiValue}>{stats?.bounceRate || 0}%</span>
+                    <span style={styles.kpiSub}>{stats?.bounceSessions || 0} de {stats?.totalSessions || 0} rebotes</span>
+                  </div>
+                </div>
+
+                {/* Clicks Encuesta */}
+                <div style={styles.kpiCard}>
+                  <div style={{ ...styles.kpiIcon, backgroundColor: 'rgba(245, 158, 11, 0.12)' }}>
+                    <MousePointer size={20} color="#f59e0b" />
+                  </div>
+                  <div style={styles.kpiInfo}>
+                    <span style={styles.kpiLabel}>Clicks Encuesta</span>
+                    <span style={styles.kpiValue}>{stats?.totalSurveyClicks || 0}</span>
+                    <span style={styles.kpiSub}>Interacciones PMV</span>
+                  </div>
+                </div>
+
+                {/* Descargas APK */}
+                <div style={styles.kpiCard}>
+                  <div style={{ ...styles.kpiIcon, backgroundColor: 'rgba(255, 78, 32, 0.12)' }}>
+                    <Download size={20} color="var(--color-primary)" />
+                  </div>
+                  <div style={styles.kpiInfo}>
+                    <span style={styles.kpiLabel}>Descargas APK</span>
+                    <span style={styles.kpiValue}>{stats?.totalDownloads || 0}</span>
+                    <span style={styles.kpiSub}>Descargas app Android</span>
+                  </div>
+                </div>
+
+                {/* Total Sesiones */}
+                <div style={styles.kpiCard}>
+                  <div style={{ ...styles.kpiIcon, backgroundColor: 'rgba(139, 92, 246, 0.12)' }}>
+                    <Users size={20} color="#8b5cf6" />
+                  </div>
+                  <div style={styles.kpiInfo}>
+                    <span style={styles.kpiLabel}>Total Visitas</span>
+                    <span style={styles.kpiValue}>{stats?.totalSessions || 0}</span>
+                    <span style={styles.kpiSub}>Sesiones iniciadas</span>
+                  </div>
                 </div>
               </div>
 
@@ -129,13 +216,32 @@ export const AdminModal: React.FC<AdminModalProps> = ({ isOpen, onClose }) => {
               )}
 
               <div style={styles.rawSection}>
-                <h4 style={styles.rawTitle}>Contenido de downloads.json (Lectura)</h4>
+                <h4 style={styles.rawTitle}>Resumen JSON (Lectura de Servidor)</h4>
                 <pre style={styles.rawJson}>
-                  {JSON.stringify({ totalDownloads: stats?.totalDownloads }, null, 2)}
+                  {JSON.stringify(
+                    {
+                      totalDownloads: stats?.totalDownloads,
+                      totalSessions: stats?.totalSessions,
+                      avgTimeSeconds: stats?.avgTimeSeconds,
+                      avgScrollDepthPercent: stats?.avgScrollDepth,
+                      bounceRatePercent: stats?.bounceRate,
+                      totalSurveyClicks: stats?.totalSurveyClicks
+                    },
+                    null,
+                    2
+                  )}
                 </pre>
               </div>
 
               <div style={styles.actions}>
+                <button
+                  onClick={() => fetchStats(secretKey)}
+                  style={styles.refreshBtn}
+                  disabled={loading}
+                >
+                  <RefreshCw size={13} style={{ marginRight: '6px' }} className={loading ? 'spin' : ''} />
+                  {loading ? 'Cargando...' : 'Actualizar'}
+                </button>
                 <button onClick={handleLogout} style={styles.logoutBtn}>
                   Cerrar Sesión
                 </button>
@@ -165,13 +271,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   modal: {
     width: '100%',
-    maxWidth: '420px',
-    borderRadius: '20px',
-    background: 'rgba(255, 255, 255, 0.85)',
+    maxWidth: '580px',
+    borderRadius: '24px',
+    background: 'rgba(255, 255, 255, 0.92)',
     border: '1px solid var(--border-glow)',
-    padding: '24px',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+    padding: '28px',
+    boxShadow: '0 24px 48px rgba(0, 0, 0, 0.12)',
     boxSizing: 'border-box',
+    maxHeight: '90vh',
+    overflowY: 'auto',
   },
   header: {
     display: 'flex',
@@ -179,7 +287,7 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     marginBottom: '20px',
     borderBottom: '1px solid var(--border-light)',
-    paddingBottom: '12px',
+    paddingBottom: '14px',
   },
   titleRow: {
     display: 'flex',
@@ -252,39 +360,57 @@ const styles: Record<string, React.CSSProperties> = {
   statsContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '20px',
   },
-  statCard: {
+  kpiGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+    gap: '12px',
+  },
+  kpiCard: {
     display: 'flex',
     alignItems: 'center',
-    gap: '16px',
-    padding: '16px',
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    gap: '12px',
+    padding: '14px',
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
     border: '1px solid var(--border-light)',
-    borderRadius: '12px',
+    borderRadius: '14px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
   },
-  statIconContainer: {
-    width: '44px',
-    height: '44px',
+  kpiIcon: {
+    width: '40px',
+    height: '40px',
     borderRadius: '10px',
-    backgroundColor: 'var(--color-secondary-glow)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
-  statInfo: {
+  kpiInfo: {
     display: 'flex',
     flexDirection: 'column',
+    minWidth: 0,
   },
-  statLabel: {
-    fontSize: '12px',
+  kpiLabel: {
+    fontSize: '11px',
+    fontWeight: 600,
     color: 'var(--text-muted)',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
   },
-  statValue: {
-    fontSize: '24px',
+  kpiValue: {
+    fontSize: '20px',
     fontWeight: 800,
     color: 'var(--text-main)',
     fontFamily: 'var(--font-heading)',
+    lineHeight: 1.2,
+  },
+  kpiSub: {
+    fontSize: '10px',
+    color: 'var(--text-dark)',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   timeInfo: {
     display: 'flex',
@@ -308,16 +434,30 @@ const styles: Record<string, React.CSSProperties> = {
     padding: '12px',
     backgroundColor: '#0f172a',
     color: '#38bdf8',
-    borderRadius: '8px',
+    borderRadius: '10px',
     fontFamily: 'monospace',
     fontSize: '12px',
     overflowX: 'auto',
   },
   actions: {
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderTop: '1px solid var(--border-light)',
-    paddingTop: '12px',
+    paddingTop: '14px',
+  },
+  refreshBtn: {
+    background: 'none',
+    border: '1px solid var(--border-glow)',
+    color: 'var(--color-secondary)',
+    padding: '8px 14px',
+    borderRadius: '8px',
+    fontSize: '12px',
+    fontWeight: 600,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    transition: 'var(--transition-smooth)',
   },
   logoutBtn: {
     background: 'none',

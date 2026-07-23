@@ -1,3 +1,28 @@
 {
-  "totalDownloads": 5
+  "totalDownloads": 30,
+  "totalSessions": 147,
+  "totalTimeSeconds": 11477,
+  "totalScrollDepthSum": 10060,
+  "bounceSessions": 26,
+  "totalSurveyClicks": 19,
+  "sessions": {
+    "sess_simulated_demo": {
+      "durationSeconds": 78,
+      "maxScrollDepth": 68,
+      "clickedSurvey": true,
+      "isBounce": false
+    },
+    "sess_ufjwy0snf_1784767584349": {
+      "durationSeconds": 117,
+      "maxScrollDepth": 100,
+      "clickedSurvey": false,
+      "isBounce": false
+    },
+    "sess_z58ubfeui_1784768052166": {
+      "durationSeconds": 50,
+      "maxScrollDepth": 100,
+      "clickedSurvey": false,
+      "isBounce": false
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Hero } from './components/Hero';
 import { YoloDemo } from './components/YoloDemo';
 import { GeolocationMap } from './components/GeolocationMap';
@@ -9,9 +9,14 @@ import { InstallGuide } from './components/InstallGuide';
 import { PMVSurvey, SURVEY_URL } from './components/PMVSurvey';
 import { AdminModal } from './components/AdminModal';
 import { Lock } from 'lucide-react';
+import { initAnalyticsTracker, trackSurveyClick } from './utils/analytics';
 
 function App() {
   const [isAdminModalOpen, setIsAdminModalOpen] = React.useState(false);
+
+  useEffect(() => {
+    initAnalyticsTracker();
+  }, []);
 
   return (
     <div style={styles.appContainer}>
@@ -22,6 +27,7 @@ function App() {
           href={SURVEY_URL}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={trackSurveyClick}
           style={styles.announcementLink}
           className="announcement-hover-link"
         >
@@ -99,7 +105,7 @@ function App() {
               <h5 style={styles.footerColTitle}>Soporte</h5>
               <a href="#guia" style={styles.footerLink}>Guía de Instalación</a>
               <a href="/api/download" style={styles.footerLink}>Descargar APK</a>
-              <a href={SURVEY_URL} target="_blank" rel="noopener noreferrer" style={styles.footerLink}>Encuesta PMV</a>
+              <a href={SURVEY_URL} target="_blank" rel="noopener noreferrer" onClick={trackSurveyClick} style={styles.footerLink}>Encuesta PMV</a>
               <span style={styles.footerLinkDisabled}>Términos de Servicio</span>
             </div>
           </div>
